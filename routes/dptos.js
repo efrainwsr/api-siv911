@@ -1,18 +1,18 @@
 const router = require('express').Router();
 const Joi = require('@hapi/joi');
-const queries = require('../queries/users.js');
+const queries = require('../queries/dptos.js');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 
-router.post('/getAllUsers', async (req, res) => {
+router.post('/getAll', async (req, res) => {
 
-    const result = await queries.getAllUsers();
-    //console.log(result);
+    const result = await queries.getAll();
+    console.log(result);
     
     res.json({
         error: false,
-        data: result
+        result
     })
 })
 
@@ -23,9 +23,9 @@ router.post('/createUser', async (req, res) =>{
         nombre: Joi.string().min(3).max(25).required(),
         usuario: Joi.string().alphanum().min(3).max(25).required(),
         pwd: Joi.string().min(4).max(1024).required(),
-        roles: Joi.required(),
+        roles: Joi.string().required(),
         created_at: Joi.string().required(),
-        updated_at: Joi.string(),
+        updated_at: Joi.string().required(),
         status: Joi.string().required(),
         tipo: Joi.string().required(),
         avatar: Joi.string()
@@ -74,45 +74,5 @@ router.post('/createUser', async (req, res) =>{
         data: result
     })
 })
-
-
-/*router.post('/login', async (req, res) => {
-    const schemaCredentials = Joi.object({
-      usuario: Joi.string().alphanum().min(4).max(25).required(),
-      pwd: Joi.string().min(4).max(1024).required(),
-    });
-  
-    const { error } = schemaCredentials.validate(req.body);
-  
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
-  
-    const userCredentials = await queries.login(req.body.usuario);
-    if (userCredentials && userCredentials.error) {
-      return res.status(500).json(userCredentials); // Error de conexión a la base de datos
-    }
-  
-    if (!userCredentials) {
-      return res.status(400).json({ message: 'Usuario o contraseña incorrecto' });
-    }
-  
-    const validPassword = await bcrypt.compare(req.body.pwd, userCredentials[0].pwd);
-    if (!validPassword) {
-      return res.status(400).json({ error: true, message: 'Usuario o contraseña incorrecto' });
-    }
-  
-    // Create token
-    const token = jwt.sign({
-      name: userCredentials[0].nombre,
-      user: userCredentials[0].usuario
-    }, process.env.TOKEN_SECRET);
-  
-    res.header('auth-token', token).json({
-        error: null,
-        data: userCredentials
-    })
-  
-  });  */
 
 module.exports = router;

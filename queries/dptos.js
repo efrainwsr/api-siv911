@@ -14,7 +14,7 @@ async function userExist(data) {
 async function createUser(data) {
   try {
     const [results, fields] = await conn.execute('INSERT INTO usuarios (dpto_id, nombre, usuario, pwd, roles, created_at, updated_at, status, tipo, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [data.dpto_id, data.nombre, data.usuario, data.pwd, data.roles, data.created_at, data.updated_at, data.status, data.tipo, data.avatar]);
+      [data.dpto_id, data.nombre, data.usuario, data.pwd, data.roles, data.created_at, data.updated_at, data.status, data.tipo, data.avatar]);
     return results;
   } catch (err) {
     console.error('Error en la consulta de createUser:', err.message);
@@ -23,9 +23,9 @@ async function createUser(data) {
 }
 
 
-async function getAllUsers(){
+async function getAll(){
   try {
-    const [results, fields] = await conn.execute('SELECT * FROM usuarios');
+    const [results, fields] = await conn.execute('SELECT * FROM dptos ORDER BY nombre');
 
   console.log(results); // results contains rows returned by server
   //console.log(fields); // fields contains extra meta data about results, if available
@@ -37,19 +37,5 @@ async function getAllUsers(){
 }
 }
 
-/*
-async function login(usuario) {
-  try {
-    const [results, fields] = await conn.execute('SELECT * FROM usuarios WHERE usuario = ?', [usuario]);
-    return results.length > 0 ? results : null;
-  } catch (err) {
-    console.error('Error en la consulta de login:', err.message);
-    return { error: true, message: 'Fallo en la conexión a la base de datos' };
-  }
-}*/
 
-module.exports = {getAllUsers, createUser, userExist, /*login*/}
-
-//createUser();
-
-//getAllUsers();
+module.exports = {getAll, createUser, userExist}
